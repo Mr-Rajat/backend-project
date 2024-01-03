@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A complete backend",
   "main": "index.js",
-  "scripts": {
+  "type": "module",
+    "scripts": {
+      "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -11,5 +13,8 @@
     "backend"
   ],
   "author": "Rajat Choudhary",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
 }
