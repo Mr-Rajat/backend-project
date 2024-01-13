@@ -176,8 +176,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1  // this removes the field from document
             }
         },
         { // this option will return new updated value in response
@@ -269,7 +269,10 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res.status(200)
-        .json(200, req.user, "Current user fetched successfully")
+        .json(
+            // req.user
+            new ApiResponse(200, req.user, "Current user fetched successfully")
+        )
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -400,7 +403,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                 },
                 isSubscribed: {
                     $cond: {
-                        if: { $in: [req.user?._id, "$subscribers.subscriber"]},
+                        if: { $in: [req.user?._id, "$subscribers.subscriber"] },
                         then: true,
                         else: false
                     }
@@ -427,9 +430,9 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     }
 
     return res.status(200)
-    .json(
-        new ApiResponse(200, channel[0], "User channel fetched successfully")
-    )
+        .json(
+            new ApiResponse(200, channel[0], "User channel fetched successfully")
+        )
 })
 
 const getWatchHistory = asyncHandler(async (req, res) => {
@@ -448,7 +451,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $lookup: {
-                            from : "users",
+                            from: "users",
                             localField: "owner",
                             foreignField: "_id",
                             as: "owner",
@@ -476,13 +479,13 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     ])
 
     return res.status(200)
-    .json(
-        new ApiResponse(
-            200,
-            user[0].watchHistory,
-            "Watch history fetched successfully"
+        .json(
+            new ApiResponse(
+                200,
+                user[0].watchHistory,
+                "Watch history fetched successfully"
+            )
         )
-    )
 })
 
 export {
