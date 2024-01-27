@@ -19,7 +19,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
     const toggleSubscription = await Subscription.findOne({
         $and: [
-            { channel: mongoose.Types.ObjectId(channelId) },
+            { channel: new mongoose.Types.ObjectId(channelId) },
             { subscriber: req.user?._id }
         ]
     })
@@ -28,7 +28,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
         const subscribedToggle = await Subscription.create({
             subscriber: req.user?._id,
-            channel: mongoose.Types.ObjectId(channelId)
+            channel: new mongoose.Types.ObjectId(channelId)
         })
 
         res.status(200).json(
@@ -60,7 +60,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     }
 
     const channelSubscriber = await Subscription.find({
-        channel: mongoose.Types.ObjectId(channelId)
+        channel: new mongoose.Types.ObjectId(channelId)
     }).populate("subscriber")
 
     if (!channelSubscriber) {
@@ -87,7 +87,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
 
     const subscribedChannelList = await Subscription.find(
         {
-            subscriber: mongoose.Types.ObjectId(subscriberId),
+            subscriber: new mongoose.Types.ObjectId(subscriberId),
         }
     ).populate("channel")
 

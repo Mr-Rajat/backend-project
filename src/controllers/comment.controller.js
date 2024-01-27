@@ -16,7 +16,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
     const videoComments = await Comment.find(
         {
-            video: mongoose.Types.ObjectId(videoId)
+            video: new mongoose.Types.ObjectId(videoId)
         }
     ).skip((parseInt(page) - 1) * parseInt(limit)) // Skip documents based on the current page
         .limit(parseInt(limit)) // Limit the number of documents per page
@@ -49,7 +49,7 @@ const addComment = asyncHandler(async (req, res) => {
 
     const comment = await Comment.create({
         content,
-        video: mongoose.Types.ObjectId(videoId),
+        video: new mongoose.Types.ObjectId(videoId),
         owner: req.user?._id
     })
 
