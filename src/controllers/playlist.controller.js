@@ -137,7 +137,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
     const videoIndex = playlist.video.indexOf(videoId)
     // just adding extra check ... review when data available
-    if(videoIndex === -1){
+    if (videoIndex === -1) {
         throw new ApiError(404, "video not found in the playlist")
     }
 
@@ -147,7 +147,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     const updatedPlaylist = await playlist.save()
 
     res.status(200).json(
-        new ApiResponse(200, updatePlaylist, "Video removed successfully")
+        new ApiResponse(200, updatedPlaylist, "Video removed successfully")
     )
 
 })
@@ -203,7 +203,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
 
     const updatedPlaylist = await playlist.save()
 
-    if (!updatePlaylist) {
+    if (!updatedPlaylist) {
 
         throw new ApiError(500, "Playlist not updated due to some error")
     }
