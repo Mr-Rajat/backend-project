@@ -30,7 +30,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             "likedBy": req.user._id
         })
 
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, newVideoLike, "video like by user successfully")
         )
     }
@@ -38,7 +38,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     const removeVideoLike = await videoLike.deleteOne()
 
     if (removeVideoLike.deletedCount === 1) {
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, null, "User has removed his like of this video successfully")
         )
     } else {
@@ -72,7 +72,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
             likedBy: req.user?._id
         })
 
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, newCommentLike, "Comment like added successfully")
         )
     }
@@ -80,7 +80,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     const removeCommentLike = await toggleComment.deleteOne()
 
     if (removeCommentLike.deletedCount === 1) {
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, {}, "Comment unliked successfully")
         )
     }
@@ -125,11 +125,11 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     const removeTweetLike = await toggleTweetLike.deleteOne()
 
     if (removeTweetLike.deletedCount === 1) {
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, removeTweetLike, "Tweet Like removed successfully")
         )
     } else {
-        res.status(500).json(
+        return res.status(500).json(
             500, removeTweetLike, "Something went wrong, could not remove tweet like"
         )
     }
@@ -145,13 +145,13 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         video: {
             $exists: true
         }
-    }).populate("video").populate("owner")
+    }).populate("video").populate("likedBy")
 
-    if(!likedVideos.length){
+    if (!likedVideos.length) {
         throw new ApiError(404, "no liked videos found")
     }
 
-    res.status(200).json(
+    return res.status(200).json(
         new ApiResponse(200, likedVideos, "Liked videos fetched successfullyF")
     )
 

@@ -107,7 +107,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     const updatedPlaylist = await playlist.save()
 
     res.status(200).json(
-        200, updatePlaylist, "Video Added in the playlist successfully"
+        200, updatedPlaylist, "Video Added in the playlist successfully"
     )
 
 
