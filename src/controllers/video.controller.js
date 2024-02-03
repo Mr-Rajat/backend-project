@@ -10,6 +10,48 @@ import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
     //TODO: get all videos based on query, sort, pagination
+
+    // got from chatgpt
+    // Build the query object
+    const queryObject = {};
+    if (query) {
+        queryObject.$or = [
+            { title: { $regex: query, $options: 'i' } },
+            { description: { $regex: query, $options: 'i' } }
+        ];
+    }
+    if (userId) {
+        queryObject.owner = userId;
+    }
+
+    // Build the sort object
+    const sortObject = {};
+    if (sortBy && sortType) {
+        sortObject[sortBy] = sortType === 'asc' ? 1 : -1;
+    } else {
+        sortObject.createdAt = -1;
+    }
+
+    try {
+        // Use aggregatePaginate to paginate and sort the results
+        const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: sortObject
+        };
+
+        const result = await Video.aggregatePaginate([{ $match: queryObject }], options);
+
+        res.status(200).json({
+            success: true,
+            data: result.docs
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {

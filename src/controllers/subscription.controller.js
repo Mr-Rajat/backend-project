@@ -8,8 +8,9 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 const toggleSubscription = asyncHandler(async (req, res) => {
     const { channelId } = req.params
+
     // TODO: toggle subscription
-    if (channelId?.trim()) {
+    if (!channelId?.trim()) {
         throw new ApiError(404, "Channel Id not found")
     }
 
@@ -31,7 +32,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
             channel: new mongoose.Types.ObjectId(channelId)
         })
 
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, subscribedToggle, "Channel subscribed successfully")
         )
     }
@@ -39,7 +40,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     const toggleUnsubscribe = await toggleSubscription.deleteOne()
 
     if (toggleUnsubscribe.deletedCount === 1) {
-        res.status(200).json(
+        return res.status(200).json(
             new ApiResponse(200, toggleUnsubscribe, "Channel Unsubscribed successfully")
         )
     } else {
